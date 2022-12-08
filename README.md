@@ -21,3 +21,4 @@
 ### Required Modules/Dependencies
   1. Python-Telegram-Module
   2. Pip.
+  3. .Python-dotenv
