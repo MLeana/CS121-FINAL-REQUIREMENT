@@ -1,6 +1,6 @@
 # TELEGRAM REMINDER BOT
 
-###FEATURES OF TELEGRAM REMINDER BOT
+### FEATURES OF TELEGRAM REMINDER BOT
 
   What can this Telegram Bot do?
   1. Remind a user of event with specific time and date.
