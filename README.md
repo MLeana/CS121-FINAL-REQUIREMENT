@@ -15,10 +15,10 @@
   4. Create our Main Menu and variables.
   5. Create functions to save the data.
   6. Handle messages and conversations with the telegram Bot using Python.
-  7. Telling the bot whaat functions to use
+  7. Telling the bot what functions to use
   8. run the BOT!
 
 ### Required Modules/Dependencies
   1. Python-Telegram-Module
   2. Pip.
-  3. .Python-dotenv
+  3. Python-dotenv
