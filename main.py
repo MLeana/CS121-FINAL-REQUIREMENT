@@ -289,3 +289,134 @@ def add_reminder_info(update, context):
 
     if "pm" in m.lower():
         hours = hours + 12
+        
+  try:
+        seconds = datetime.timestamp(
+            datetime.strptime(reminder_date, "%d/%m/%Y")
+            + timedelta(hours=hours, minutes=minutes)
+        ) - (datetime.timestamp(datetime.now()) + (utc * 3600))
+
+        if seconds < 0:
+            update.message.reply_text(
+                "❌ The time and date you entered are in the past! We're sorry, you'll have to restart the process...",
+                reply_markup=ReplyKeyboardMarkup(main_keyboard, resize_keyboard=True),
+            )
+            json_cancel_add_reminder_process(update.message.from_user.id)
+
+            return ConversationHandler.END
+
+        else:
+            pass
+
+    except:
+        update.message.reply_text(
+            "❌ Wrong date format! We're sorry, you'll have to restart the process...",
+            reply_markup=ReplyKeyboardMarkup(main_keyboard, resize_keyboard=True),
+        )
+        json_cancel_add_reminder_process(update.message.from_user.id)
+
+        return ConversationHandler.END
+
+    context.job_queue.run_once(
+        notify,
+        seconds,
+        context=[user, reminder_title, reminder_date, reminder_time, reminder_info],
+    )
+
+    update.message.reply_text(
+        "✅ Reminder succesfully added!",
+        reply_markup=ReplyKeyboardMarkup(main_keyboard, resize_keyboard=True),
+    )
+
+    return ConversationHandler.END
+
+
+def cancel_add_reminder_process(update, context):
+    """Cancels and ends the reminder process."""
+    update.message.reply_text(
+        "❌ Process ended.",
+        reply_markup=ReplyKeyboardMarkup(main_keyboard, resize_keyboard=True),
+    )
+    json_cancel_add_reminder_process(update.message.from_user.id)
+
+    return ConversationHandler.END
+
+
+def delete_reminder(update, context):
+    with open("data.json", "r+") as file:
+        content = json.load(file)
+        content = content["users"][str(update.message.from_user.id)]["reminders"]
+
+        if len(content) == 0:
+            update.message.reply_text("📪 You have no reminders to delete!")
+
+            return ConversationHandler.END
+
+        else:
+            update.message.reply_text(
+                "Choose the number of the reminder you want to delete\n\n"
+                "Send /cancel to stop the process.\n\n"
+                "Note that deleting the reminder will only remove it from the reminders history list, you will be reminded of it anyway.\n\n"
+                f"{json_get_reminders_list(update.message.from_user.id)}",
+                reply_markup=ReplyKeyboardRemove(),
+                parse_mode="Markdown",
+            )
+
+            return DELETE_REMINDER_INDEX
+
+
+def delete_reminder_status(update, context):
+    try:
+        index = int(str(update.message.text))
+
+        if index <= 0:
+            update.message.reply_text(
+                "❌ Please try again and send me only existing reminder number."
+            )
+            return DELETE_REMINDER_INDEX
+        else:
+            json_delete_reminder(update.message.from_user.id, index)
+
+            update.message.reply_text(
+                "✅ Reminder Deleted Succesfully",
+                reply_markup=ReplyKeyboardMarkup(main_keyboard, resize_keyboard=True),
+            )
+
+            return ConversationHandler.END
+
+    except:
+        update.message.reply_text(
+            "❌ Please try again and send me only existing reminder number."
+        )
+        return DELETE_REMINDER_INDEX
+
+
+def cancel_delete_reminder_process(update, context):
+
+    update.message.reply_text(
+        "❌ Process ended.",
+        reply_markup=ReplyKeyboardMarkup(main_keyboard, resize_keyboard=True),
+    )
+
+    return ConversationHandler.END
+
+
+def notify(context):
+    job = context.job
+
+    chat_id = job.context[0]
+    reminder_title = job.context[1]
+    reminder_date = job.context[2]
+    reminder_time = job.context[3]
+    reminder_info = job.context[4]
+
+    context.bot.send_message(
+        chat_id=chat_id,
+        text="🚨 REMINDER 🚨\n\n"
+        f"*{reminder_title}*\n"
+        f"_Info_ : {reminder_info}\n\n"
+        f"_Date_ : {reminder_date}\n"
+        f"_Time_ : {reminder_time}",
+        parse_mode="Markdown",
+    )
+
