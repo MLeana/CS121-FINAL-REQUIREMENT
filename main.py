@@ -148,3 +148,50 @@ _Info_ : {info}
             return message
 
         
+def start_command(update, context):
+    update.message.reply_text(
+        "👋 Welcome to my bot! It can remind you of anything in time!",
+        reply_markup=ReplyKeyboardMarkup(main_keyboard, resize_keyboard=True),
+    )
+
+    new_user = is_new_user(
+        update.message.from_user.id,
+        update.message.from_user.username,
+        update.message.from_user.first_name,
+        update.message.from_user.last_name,
+    )
+
+    if new_user is True:
+        update.message.reply_text(
+            "‼ Set your timezone ‼\n\n"
+            "Send me your UTC (exp: +2, -1)\n\n"
+            "You can always change it later",
+            reply_markup=ReplyKeyboardRemove(),
+        )
+        return ADD_UTC
+    else:
+        pass
+
+
+def request_utc(update, context):
+    update.message.reply_text(
+        "🌐 Please send me your UTC\n\n👉 exemple: +2, -1",
+        reply_markup=ReplyKeyboardRemove(),
+    )
+    return ADD_UTC
+
+
+def add_utc(update, context):
+    utc = str(update.message.text)
+
+    try:
+        utc = int(utc)
+        json_add_utc(update.message.from_user.id, utc)
+        update.message.reply_text(
+            "✅ Your timezone was successfully set",
+            reply_markup=ReplyKeyboardMarkup(main_keyboard, resize_keyboard=True),
+        )
+        return ConversationHandler.END
+    except:
+        update.message.reply_text("❌ Wrong format, please send again")
+        return ADD_UTC
