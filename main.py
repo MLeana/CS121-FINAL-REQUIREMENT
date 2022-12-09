@@ -229,3 +229,63 @@ def add_reminder(update, context):
     update.message.reply_text("💡 Reminder title :")
 
     return REMINDER_TITLE
+def add_reminder_title(update, context):
+    """Stores the reminder title and asks for a reminder date."""
+    json_add_reminder_info(update.message.from_user.id, "title", update.message.text)
+
+    update.message.reply_text("📅 Reminder date :\n\nFormat : dd/mm/yyyy")
+
+    return REMINDER_DATE
+
+
+def add_reminder_date(update, context):
+    """Stores the reminder date and asks for a reminder time."""
+    json_add_reminder_info(update.message.from_user.id, "date", update.message.text)
+
+    update.message.reply_text("⏲ Reminder time :\n\nFormat : HH:MM AM/PM")
+
+    return REMINDER_TIME
+
+
+def add_reminder_time(update, context):
+    """Stores the reminder time and asks for a reminder info."""
+    json_add_reminder_info(update.message.from_user.id, "time", update.message.text)
+
+    update.message.reply_text("ℹ Reminder info :")
+
+    return REMINDER_INFO
+
+
+def add_reminder_info(update, context):
+    """Stores reminder info and ends the conversation."""
+    json_add_reminder_info(update.message.from_user.id, "info", update.message.text)
+
+    all_info = json_get_info(update.message.from_user.id)
+    reminder_title, reminder_date, reminder_time, reminder_info = (
+        all_info["title"],
+        all_info["date"],
+        all_info["time"],
+        all_info["info"],
+    )
+
+    utc = json_get_utc(update.message.from_user.id)
+    user = update.message.chat_id
+
+    try:
+        hours, minutes, m = (
+            int(reminder_time.split(" ")[0].split(":")[0]),
+            int(reminder_time.split(" ")[0].split(":")[1]),
+            reminder_time.split(" ")[1],
+        )
+
+    except:
+        update.message.reply_text(
+            "❌ Wrong time format! We're sorry, you'll have to restart the process...",
+            reply_markup=ReplyKeyboardMarkup(main_keyboard, resize_keyboard=True),
+        )
+        json_cancel_add_reminder_process(update.message.from_user.id)
+
+        return ConversationHandler.END
+
+    if "pm" in m.lower():
+        hours = hours + 12
