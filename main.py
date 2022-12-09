@@ -419,4 +419,31 @@ def notify(context):
         f"_Time_ : {reminder_time}",
         parse_mode="Markdown",
     )
+    
+    def main():
+    BOT_TOKEN = os.getenv("5803918103:AAFnW5P2rWJroGa5jArPtrqjNDHiL4TSngs")
+    updater = Updater("5803918103:AAFnW5P2rWJroGa5jArPtrqjNDHiL4TSngs", use_context=True)
+    dp = updater.dispatcher
+
+    start_command_handler = ConversationHandler(
+        entry_points=[CommandHandler("start", start_command)],
+        states={
+            ADD_UTC: [MessageHandler(Filters.text, add_utc)],
+        },
+        fallbacks=[CommandHandler("nevermind", start_command)],
+    )
+    dp.add_handler(start_command_handler)
+
+    change_utc_handler = ConversationHandler(
+        entry_points=[MessageHandler(Filters.regex("Change UTC"), request_utc)],
+        states={
+            ADD_UTC: [MessageHandler(Filters.text, add_utc)],
+        },
+        fallbacks=[CommandHandler("nevermind", request_utc)],
+    )
+    dp.add_handler(change_utc_handler)
+
+    dp.add_handler(MessageHandler(Filters.regex("Donate"), donate))
+    dp.add_handler(MessageHandler(Filters.regex("All Reminders"), all_reminders))
+
 
