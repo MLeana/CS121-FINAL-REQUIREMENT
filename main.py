@@ -447,3 +447,51 @@ def notify(context):
     dp.add_handler(MessageHandler(Filters.regex("All Reminders"), all_reminders))
 
 
+add_reminder_handler = ConversationHandler(
+        entry_points=[MessageHandler(Filters.regex("Add Reminder"), add_reminder)],
+        states={
+            REMINDER_TITLE: [
+                MessageHandler(
+                    Filters.text & ~Filters.regex("/cancel"), add_reminder_title
+                )
+            ],
+            REMINDER_DATE: [
+                MessageHandler(
+                    Filters.text & ~Filters.regex("/cancel"), add_reminder_date
+                )
+            ],
+            REMINDER_TIME: [
+                MessageHandler(
+                    Filters.text & ~Filters.regex("/cancel"), add_reminder_time
+                )
+            ],
+            REMINDER_INFO: [
+                MessageHandler(
+                    Filters.text & ~Filters.regex("/cancel"), add_reminder_info
+                )
+            ],
+        },
+        fallbacks=[CommandHandler("cancel", cancel_add_reminder_process)],
+    )
+    dp.add_handler(add_reminder_handler)
+
+    delete_reminder_handler = ConversationHandler(
+        entry_points=[MessageHandler(Filters.regex("Delete History"), delete_reminder)],
+        states={
+            DELETE_REMINDER_INDEX: [
+                MessageHandler(
+                    Filters.text & ~Filters.regex("/cancel"), delete_reminder_status
+                )
+            ]
+        },
+        fallbacks=[CommandHandler("cancel", cancel_delete_reminder_process)],
+    )
+    dp.add_handler(delete_reminder_handler)
+
+    updater.start_polling()
+    updater.idle()
+
+
+if __name__ == "__main__":
+    print("Bot is running...")
+    main()
