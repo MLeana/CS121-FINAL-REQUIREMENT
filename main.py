@@ -195,3 +195,37 @@ def add_utc(update, context):
     except:
         update.message.reply_text("❌ Wrong format, please send again")
         return ADD_UTC
+    
+    def donate(update, context):
+    update.message.reply_text(
+        "Thank you for donating! ❤",
+        reply_markup=InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "Buy Me A Coffee", "https://www.buymeacoffee.com/simonfarah"
+                    )
+                ]
+            ]
+        ),
+    )
+
+
+def all_reminders(update, context):
+    update.message.reply_text(
+        f"{json_get_reminders_list(update.message.from_user.id)}", parse_mode="Markdown"
+    )
+
+
+def add_reminder(update, context):
+    """Starts the conversation and asks the user about the reminder title."""
+    update.message.reply_text(
+        "⚡ Adding a new reminder\n\n" "Send /cancel to stop the process.",
+        reply_markup=ReplyKeyboardRemove(),
+    )
+
+    json_add_reminder(update.message.from_user.id)
+
+    update.message.reply_text("💡 Reminder title :")
+
+    return REMINDER_TITLE
