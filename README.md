@@ -16,7 +16,7 @@
   5. Create functions to save the data.
   6. Handle messages and conversations with the telegram Bot using Python.
   7. Telling the bot what functions to use
-  8. run the BOT!
+  8. Run the BOT!
 
 ### Required Modules/Dependencies
   1. Python-Telegram-Module
