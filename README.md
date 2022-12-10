@@ -22,3 +22,26 @@
   1. Python-Telegram-Module
   2. Pip.
   3. Python-dotenv
+
+```mermaid
+journey
+	title UML Diagram for Bejeweled Bot
+	section User open the Bot
+		User press start: 5: User
+		Bot replies introduction: 5: Bot
+		Bot asks for an action: 5: Bot
+		User chooses Change UTC: 5: User
+    Bot changes timezone: 5: Bot
+    Bot asks for another action: 5: Bot
+    User chooses Add Reminder: 5: User
+    Bot asks for Reminder Title, Reminder Date, Reminder Time and Reminder info: 5: Bot
+    User answers all questions: 5: User
+	section Other Options
+		All Reminders: 5: Bot
+		Delete History: 5: Bot
+	section Result Declared
+		Reminder Succesfully Added: 5: Bot
+		Reminder Deleted Succesfully: 5: Bot
+    Wrong time format! We're sorry, you'll have to restart the process...: 1: Bot
+    Wrong date format! We're sorry, you'll have to restart the process...: 1: Bot    
+```
