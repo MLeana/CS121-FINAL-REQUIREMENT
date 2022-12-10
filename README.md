@@ -47,3 +47,7 @@ journey
     Wrong date format! We're sorry, you'll have to restart the process...: 1: Bot    
 ```
 ### Video Presentation
+
+<a href="https://www.youtube.com/watch?v=UKr4oLy-9Ds" target="_blank"><img src="![image](https://user-images.githubusercontent.com/111265651/206849578-6cde12f4-fe8d-4514-b641-35293d71ff6a.png)
+/0.jpg" 
+alt="TELEGRAM REMINDER BOT" width="240" height="180" border="10" /></a>
