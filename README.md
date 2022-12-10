@@ -23,6 +23,7 @@
   2. Pip.
   3. Python-dotenv
 
+### UML Diagram
 ```mermaid
 journey
 	title UML Diagram for Bejeweled Bot
